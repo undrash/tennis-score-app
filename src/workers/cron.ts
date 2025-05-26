@@ -3,7 +3,7 @@ import { emailSender } from 'wasp/server/email'
 import type { SendEmailSummaryJob } from 'wasp/server/jobs'
 import { generateMatchSummary } from '../utils'
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
+// biome-ignore lint/complexity/noBannedTypes: This is how Wasp defines their types ({} was recommended by maintainer)
 export const sendEmailSummary: SendEmailSummaryJob<{}, void> = async (
   _,
   context

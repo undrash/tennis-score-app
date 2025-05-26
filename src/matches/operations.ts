@@ -1,6 +1,6 @@
 import * as z from 'zod'
 
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+// biome-ignore lint/suspicious/noShadowRestrictedNames: Set is native to the app
 import type { Match, Set } from 'wasp/entities'
 import { HttpError } from 'wasp/server'
 import type {

@@ -1,4 +1,4 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+// biome-ignore lint/suspicious/noShadowRestrictedNames: Set is native to the app
 import type { Match, Set } from 'wasp/entities'
 
 type MatchWithSets = Match & {

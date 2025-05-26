@@ -15,7 +15,6 @@ export function ProfilePage({ user }: { user: AuthUser }) {
     setIsUpdating(true)
     try {
       await updateUserSummaryEnabled({ isSummaryEnabled: enabled })
-      console.log('Would update isSummaryEnabled to:', enabled)
       setIsSummaryEnabled(enabled)
     } catch (error) {
       console.error('Failed to update summary settings:', error)
