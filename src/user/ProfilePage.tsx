@@ -17,7 +17,6 @@ export function ProfilePage({ user }: { user: AuthUser }) {
     try {
       await updateUserSummaryEnabled({ isSummaryEnabled: enabled })
       setIsSummaryEnabled(enabled)
-      toast.success(`Email summaries ${enabled ? 'enabled' : 'disabled'}`)
     } catch (error) {
       console.error('Failed to update summary settings:', error)
       toast.error('Failed to update settings. Please try again.')
