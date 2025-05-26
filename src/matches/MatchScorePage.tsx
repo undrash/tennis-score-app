@@ -34,10 +34,6 @@ export function MatchScorePage({ user }: { user: AuthUser }) {
     }
   )
 
-  if (!match) {
-    throw new Error('Match not found')
-  }
-
   const updateScoreFn = useAction(updateScore)
   const updateVisibilityFn = useAction(updateMatchVisibility)
 
@@ -57,7 +53,7 @@ export function MatchScorePage({ user }: { user: AuthUser }) {
       try {
         await updateVisibilityFn({
           matchId,
-          isPublic: match.isPublic,
+          isPublic: match!.isPublic,
         })
       } catch (error) {
         console.error('Failed to update visibility:', error)
