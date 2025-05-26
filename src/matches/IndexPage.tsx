@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { AuthUser } from 'wasp/auth'
+import type { AuthUser } from 'wasp/auth'
 import { logout, useAuth } from 'wasp/client/auth'
 import { getMatches, useQuery } from 'wasp/client/operations'
 import { Link } from 'wasp/client/router'
@@ -38,7 +38,14 @@ export function IndexPage() {
               <Plus className="mr-2 h-5 w-5" />
               New Match
             </Link>
+            <Link
+              to="/profile"
+              className="rounded-md bg-blue-600 px-4 py-2 text-white no-underline transition-colors hover:bg-blue-700"
+            >
+              Profile
+            </Link>
             <button
+              type="button"
               onClick={logout}
               className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-400"
             >
@@ -69,7 +76,7 @@ export function IndexPage() {
           {/* Live Matches Section */}
           <div>
             <h2 className="mb-4 flex items-center text-xl font-semibold text-navy">
-              <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-red-500"></span>
+              <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-red-500" />
               Live Matches
             </h2>
             <div className="space-y-4">
@@ -137,10 +144,12 @@ function MatchCard({
     <div
       key={match.id}
       onClick={isClickable ? onClick : undefined}
+      onKeyUp={isClickable ? onClick : undefined}
       className={cn(
         'rounded-lg bg-white p-6 shadow-md',
         isClickable && 'cursor-pointer transition-shadow hover:shadow-lg'
       )}
+      tabIndex={isClickable ? 0 : undefined}
     >
       <div className="mb-4 flex items-center justify-between">
         <div className="text-sm text-gray-500">
@@ -159,7 +168,7 @@ function MatchCard({
               'Completed'
             ) : (
               <>
-                <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-red-500"></span>
+                <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-red-500" />
                 Live
               </>
             )}

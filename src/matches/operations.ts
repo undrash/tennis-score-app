@@ -1,15 +1,17 @@
 import * as z from 'zod'
 
-import { Match, Set } from 'wasp/entities'
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import type { Match, Set } from 'wasp/entities'
 import { HttpError } from 'wasp/server'
-import {
+import type {
   CreateMatch,
   GetMatch,
   GetMatches,
   UpdateMatchVisibility,
   UpdateScore,
 } from 'wasp/server/operations'
-import { calculateNewScoreState, ScoringPlayer } from './tennisLogic'
+import type { ScoringPlayer } from './tennisLogic'
+import { calculateNewScoreState } from './tennisLogic'
 import {
   createMatchInputSchema,
   getMatchInputSchema,
