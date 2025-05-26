@@ -1,13 +1,14 @@
 import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import type { AuthUser } from 'wasp/auth'
 import { updateUserSummaryEnabled } from 'wasp/client/operations'
 
 export function ProfilePage({ user }: { user: AuthUser }) {
   const navigate = useNavigate()
   const [isSummaryEnabled, setIsSummaryEnabled] = useState(
-    user.isSummaryEnabled || false
+    user.isSummaryEnabled
   )
   const [isUpdating, setIsUpdating] = useState(false)
 
@@ -16,9 +17,10 @@ export function ProfilePage({ user }: { user: AuthUser }) {
     try {
       await updateUserSummaryEnabled({ isSummaryEnabled: enabled })
       setIsSummaryEnabled(enabled)
+      toast.success(`Email summaries ${enabled ? 'enabled' : 'disabled'}`)
     } catch (error) {
       console.error('Failed to update summary settings:', error)
-      alert('Failed to update settings. Please try again.')
+      toast.error('Failed to update settings. Please try again.')
       // Revert the state if update failed
       setIsSummaryEnabled(!enabled)
     } finally {
