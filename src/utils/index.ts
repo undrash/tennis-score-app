@@ -1,9 +1,5 @@
-import { type Match, type Set } from 'wasp/entities'
-
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email)
-}
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import type { Match, Set } from 'wasp/entities'
 
 type MatchWithSets = Match & {
   sets?: Set[]

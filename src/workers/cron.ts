@@ -1,24 +1,30 @@
 import { startOfDay, subDays } from 'date-fns'
 import { emailSender } from 'wasp/server/email'
-import { type SendEmailSummaryJob } from 'wasp/server/jobs'
-import { generateMatchSummary, isValidEmail } from '../utils'
+import type { SendEmailSummaryJob } from 'wasp/server/jobs'
+import { generateMatchSummary } from '../utils'
 
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
 export const sendEmailSummary: SendEmailSummaryJob<{}, void> = async (
   _,
   context
 ) => {
-  const email = process.env.SUMMARY_RECIPIENT_EMAIL
+  // Fetch all users with email summaries enabled
+  const usersWithSummaryEnabled = await context.entities.User.findMany({
+    where: {
+      isSummaryEnabled: true,
+      email: {
+        not: null,
+      },
+    },
+    select: {
+      id: true,
+      email: true,
+    },
+  })
 
-  if (!email) {
-    throw new Error(
-      'Recipient email not found. Please set SUMMARY_RECIPIENT_EMAIL in .env.server'
-    )
-  }
-
-  if (!isValidEmail(email)) {
-    throw new Error(
-      'Invalid email format. Please provide a valid email in SUMMARY_RECIPIENT_EMAIL'
-    )
+  if (usersWithSummaryEnabled.length === 0) {
+    console.log('No users have email summaries enabled')
+    return
   }
 
   // Find yesterday's completed matches
@@ -44,15 +50,27 @@ export const sendEmailSummary: SendEmailSummaryJob<{}, void> = async (
   // Generate summary
   const { textContent, htmlContent } = generateMatchSummary(matches)
 
-  // Send Summary
-  await emailSender.send({
-    from: {
-      name: 'Tennis Score App',
-      email: `no-reply@${process.env.MAILGUN_DOMAIN}`,
-    },
-    to: email,
-    subject: 'Daily Tennis Matches Summary',
-    text: textContent,
-    html: htmlContent,
-  })
+  // Send emails to all users with summaries enabled
+  for (const user of usersWithSummaryEnabled) {
+    try {
+      await emailSender.send({
+        from: {
+          name: 'Tennis Score App',
+          email: `no-reply@${process.env.MAILGUN_DOMAIN}`,
+        },
+        to: user.email as string,
+        subject: 'Daily Tennis Matches Summary',
+        text: textContent,
+        html: htmlContent,
+      })
+      console.log(`Email summary sent to user ${user.id} (${user.email})`)
+    } catch (error) {
+      console.error(
+        `Failed to send email to user ${user.id} (${user.email}):`,
+        error
+      )
+    }
+  }
+
+  console.log(`Email summaries sent to ${usersWithSummaryEnabled.length} users`)
 }

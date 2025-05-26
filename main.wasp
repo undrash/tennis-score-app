@@ -47,6 +47,11 @@ action updateMatchVisibility {
   entities: [Match]
 }
 
+action updateUserSummaryEnabled {
+  fn: import { updateUserSummaryEnabled } from "@src/user/operations",
+  entities: [User]
+}
+
 route RootRoute { path: "/", to: IndexPage }
 page IndexPage {
   component: import { IndexPage } from "@src/matches/IndexPage"
@@ -61,6 +66,12 @@ page NewMatchPage {
 route MatchScoreRoute { path: "/match/:matchId", to: MatchScorePage }
 page MatchScorePage {
   component: import { MatchScorePage } from "@src/matches/MatchScorePage",
+  authRequired: true
+}
+
+route ProfileRoute { path: "/profile", to: ProfilePage }
+page ProfilePage {
+  component: import { ProfilePage } from "@src/user/ProfilePage",
   authRequired: true
 }
 
@@ -80,5 +91,5 @@ job sendEmailSummaryJob {
     fn: import { sendEmailSummary } from "@src/workers/cron",
   },
   schedule: { cron: "0 8 * * *" },
-  entities: [Match]
+  entities: [User, Match]
 }
